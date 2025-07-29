@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      html, body { min-height: 100vh; }
+      body { overflow-y: auto; }
+      .terminal { max-width: 480px; margin: 32px auto 0 auto; width: 95vw; }
+      .terminal-content { width: 100%; }
+      @media (max-width: 600px) {
+        .terminal { max-width: 99vw; margin: 8px auto 0 auto; border-radius: 8px; }
+        .terminal-titlebar { font-size: 0.98rem; padding: 0 8px; }
+        .terminal-header { font-size: 1.2rem; }
+      }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATCH.NET Game Browser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="matrix-bg" style="background:#000;"></canvas>
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="window-buttons">
+                <div class="window-btn red"></div>
+                <div class="window-btn yellow"></div>
+                <div class="window-btn green"></div>
+            </div>
+            <span style="color:#33ff33;font-weight:bold;letter-spacing:1px;">PATCH.NET Terminal</span>
+            <nav style="margin-left:auto;display:flex;gap:18px;align-items:center;">
+                <a href="index.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Home</a>
+            </nav>
+        </div>
+        <div class="terminal-content" style="display:flex;flex-direction:column;align-items:center;overflow:auto;max-height:calc(100vh - 120px);">
+            <div class="terminal-output" style="font-family:'Fira Mono',monospace;color:#33ff33;font-size:1.1rem;margin-bottom:10px;text-align:center;">user@patch.net:~$</div>
+            <div class="terminal-header">Game/Mod/Cheat Browser</div>
+            <div style="margin-bottom:10px;"><span class="prompt">$</span>Enter a prompt and select mode.<span class="blinking-cursor"></span></div>
+            <div style="margin-bottom:10px;"><span class="prompt">$</span>!!DOWNLOAD AT YOUR OWN RISK!!<span class="blinking-cursor"></span></div>
+            <form id="searchForm" style="width:100%;max-width:500px;margin-bottom:18px;" onsubmit="event.preventDefault(); searchWebsites();">
+                <div class="mode-select" style="display:flex;gap:18px;margin-bottom:8px;">
+                    <label><input type="radio" name="mode" value="games" checked> Games</label>
+                    <label><input type="radio" name="mode" value="mods"> Mods</label>
+                    <label><input type="radio" name="mode" value="cheats"> Cheats</label>
+                </div>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Enter game or mod name..."
+                    style="width:100%;padding:12px 16px;border-radius:8px;border:2px solid #33ff33;background:#181c20;color:#33ff33;font-size:1.1rem;font-family:'Fira Mono',monospace;outline:none;box-sizing:border-box;margin-bottom:8px;"
+                    autocomplete="off"
+                >
+                <input
+                    type="text"
+                    id="modInput"
+                    placeholder="Mod name (for mods only)"
+                    style="width:100%;padding:12px 16px;border-radius:8px;border:2px solid #33ff33;background:#181c20;color:#33ff33;font-size:1.1rem;font-family:'Fira Mono',monospace;outline:none;box-sizing:border-box;margin-bottom:8px;display:none;"
+                    autocomplete="off"
+                >
+                <button type="submit" style="margin-top:4px;padding:8px 18px;border-radius:6px;background:#33ff33;color:#181c20;font-weight:bold;font-family:'Fira Mono',monospace;border:none;cursor:pointer;box-shadow:0 0 8px #33ff3355;">Search</button>
+            </form>
+            <div id="searchLoadingIndicator" style="display:none;text-align:center;margin-bottom:10px;">
+                <span style="color:#33ff33;">Searching...</span>
+            </div>
+            <div id="resultsContainer" style="width:100%;max-width:600px;"></div>
+            <div id="noResults" style="display:none;color:#888;text-align:center;margin-top:12px;">No matching websites found.</div>
+        </div>
+    </div>
+    <footer>
+        &copy; 2025 PATCH.NET. All rights reserved.<br>
+        <span style="color:#888;">Inspired by classic terminals.</span><br>
+        <span id="server-status" style="color:#33ff33;"></span>
+    </footer>
+<script>
+// Server status fetch (copied from index.html)
+function updateServerStatus() {
+    fetch('/server-status')
+      .then(res => res.json())
+      .then(data => {
+        let html = '';
+        if (data.minecraft) {
+          html += `Minecraft: <b>${data.minecraft.online ? 'Online' : 'Offline'}</b>`;
+          if (data.minecraft.online && data.minecraft.version) {
+            html += ` (v${data.minecraft.version})`;
+          }
+          html += '<br>';
+        }
+        if (data.fivem) {
+          html += `FiveM: <b>${data.fivem.online ? 'Online' : 'Offline'}</b><br>`;
+        }
+        document.getElementById('server-status').innerHTML = html;
+      });
+}
+updateServerStatus();
+setInterval(updateServerStatus, 10000);
+
+// Matrix background with PATCHNET letters (copied from index.html)
+const letters = "PATCHNET".split("");
+const canvas = document.getElementById("matrix-bg");
+const ctx = canvas.getContext("2d");
+let width = window.innerWidth;
+let height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+let fontSize = 24;
+let columns = Math.floor(width / fontSize);
+let drops = Array(columns).fill(1);
+let dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+function drawMatrix() {
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1;
+    ctx.font = fontSize + "px 'Fira Mono', 'Consolas', monospace";
+    ctx.fillStyle = "#33ff33";
+    for (let i = 0; i < columns; i++) {
+        if (dropDelays[i] > 0) {
+            dropDelays[i]--;
+            continue;
+        }
+        let text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (Math.random() > 0.975) {
+            drops[i] = 0;
+            dropDelays[i] = Math.floor(Math.random() * 40);
+        }
+        drops[i]++;
+        if (drops[i] * fontSize > height) {
+            drops[i] = 0;
+            dropDelays[i] = Math.floor(Math.random() * 40);
+        }
+    }
+}
+function resizeMatrix() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    columns = Math.floor(width / fontSize);
+    drops = Array(columns).fill(1);
+    dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+}
+window.addEventListener('resize', resizeMatrix);
+setInterval(drawMatrix, 50);
+
+// Game browser logic
+const resultsContainer = document.getElementById('resultsContainer');
+const noResults = document.getElementById('noResults');
+const searchLoadingIndicator = document.getElementById('searchLoadingIndicator');
+const searchInput = document.getElementById('searchInput');
+const modInput = document.getElementById('modInput');
+let mode = 'games';
+
+function updateMode() {
+    mode = document.querySelector('input[name="mode"]:checked').value;
+    if (mode === 'mods') {
+        modInput.style.display = '';
+        modInput.placeholder = 'Mod name (optional)';
+    } else {
+        modInput.style.display = 'none';
+    }
+    resultsContainer.innerHTML = '';
+    noResults.style.display = 'none';
+}
+document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', updateMode));
+updateMode();
+
+function renderResults(urls) {
+    resultsContainer.innerHTML = "";
+    if (!urls || urls.length === 0) {
+        noResults.style.display = "";
+        return;
+    }
+    noResults.style.display = "none";
+    urls.forEach(urlObj => {
+        const div = document.createElement('div');
+        div.style = "background:#23233a;color:#33ff33;padding:12px 16px;margin-bottom:10px;border-radius:8px;border:1.5px solid #33ff33;font-family:'Fira Mono',monospace;display:flex;flex-direction:column;gap:2px;";
+        div.innerHTML = `<a href="${urlObj.url}" target="_blank" style="color:#33bbff;font-weight:bold;text-decoration:none;">${urlObj.name}</a>
+            <span style="color:#888;font-size:0.98rem;word-break:break-all;">${urlObj.url}</span>`;
+        resultsContainer.appendChild(div);
+    });
+}
+
+function searchWebsites() {
+    const prompt = searchInput.value.trim();
+    const mod = modInput.value.trim();
+    // Easter egg: if prompt is 'deadlist', show only one special link
+    if (prompt.toLowerCase() === 'deadlist') {
+        searchLoadingIndicator.style.display = "none";
+        renderResults([
+            {
+                name: 'DEADLIST A005',
+                url: 'https://www.mediafire.com/file/6x7b0a7t7a3qohy/DEADLIST_A005.zip/file'
+            }
+        ]);
+        return;
+    }
+    let url = `/websearch?type=${encodeURIComponent(mode)}`;
+    if (prompt) url += `&prompt=${encodeURIComponent(prompt)}`;
+    if (mode === 'mods' && mod) url += `&mod=${encodeURIComponent(mod)}`;
+    searchLoadingIndicator.style.display = "";
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            renderResults(data.urls);
+        })
+        .catch(() => {
+            renderResults([]);
+        })
+        .finally(() => {
+            searchLoadingIndicator.style.display = "none";
+        });
+}
+</script>
+</body>
+</html>

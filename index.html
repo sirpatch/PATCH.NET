@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATCH.NET</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="matrix-bg" style="background:#000;"></canvas>
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="window-buttons">
+                <div class="window-btn red"></div>
+                <div class="window-btn yellow"></div>
+                <div class="window-btn green"></div>
+            </div>
+            <span style="color:#33ff33;font-weight:bold;letter-spacing:1px;">PATCH.NET Terminal</span>
+            <nav style="margin-left:auto;display:flex;gap:18px;align-items:center;">
+                
+                <a href="downloads.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Downloads</a>
+                <a href="login.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Login</a>
+            </nav>
+        </div>
+        <div class="terminal-content" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="terminal-output" style="font-family:'Fira Mono',monospace;color:#33ff33;font-size:1.1rem;margin-bottom:10px;text-align:center;">user@patch.net:~$</div>
+            <div class="terminal-header">PATCH.NET</div>
+            <div style="margin-bottom:10px;"><span class="prompt">$</span> Welcome to the PATCH.NET!<span class="blinking-cursor"></span></div>
+
+            <ul class="program-list">
+                <li><span class="prompt">*</span> <a href="programs.html">My Programs</a> <span style="color:#888;font-weight:normal;">- Explore my software projects.</span></li>
+                <li><span class="prompt">*</span> <a href="games.html">My Games</a> <span style="color:#888;font-weight:normal;">- Play and discover my games.</span></li>
+                <li><span class="prompt">*</span> <a href="about.html">About Me</a> <span style="color:#888;font-weight:normal;">- Learn more about the author.</span></li>
+            </ul>
+        </div>
+    </div>
+    <footer>
+    <footer style="text-align:center;color:#33ff33;opacity:0.7;margin-top:40px;">
+        &copy; 2025 PATCH.NET. All rights reserved.<br>
+        <span style="color:#888;">Inspired by classic terminals.</span><br>
+        <span id="server-status" style="color:#33ff33;"></span>
+    </footer>
+    <script>
+    // Server status fetch
+    function updateServerStatus() {
+        fetch('/server-status')
+          .then(res => res.json())
+          .then(data => {
+            let html = '';
+            if (data.minecraft) {
+              html += `Minecraft: <b>${data.minecraft.online ? 'Online' : 'Offline'}</b>`;
+              if (data.minecraft.online && data.minecraft.version) {
+                html += ` (v${data.minecraft.version})`;
+              }
+              html += '<br>';
+            }
+            if (data.fivem) {
+              html += `FiveM: <b>${data.fivem.online ? 'Online' : 'Offline'}</b><br>`;
+            }
+            document.getElementById('server-status').innerHTML = html;
+          });
+    }
+    updateServerStatus();
+    setInterval(updateServerStatus, 10000);
+
+    // --- (Login logic removed: handled by login.html) ---
+    // Redirect to thanks.html after download
+    function setupDownloadRedirects() {
+        const downloadLinks = document.querySelectorAll('a[download]');
+        downloadLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                setTimeout(() => {
+                    window.location.href = 'thanks.html';
+                }, 300);
+            });
+        });
+    }
+    setupDownloadRedirects();
+    // Matrix background with PATCHNET letters
+    const letters = "PATCHNET".split("");
+    const canvas = document.getElementById("matrix-bg");
+    const ctx = canvas.getContext("2d");
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    let fontSize = 24;
+    let columns = Math.floor(width / fontSize);
+    let drops = Array(columns).fill(1);
+    let dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+    function drawMatrix() {
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalAlpha = 1;
+        ctx.font = fontSize + "px 'Fira Mono', 'Consolas', monospace";
+        ctx.fillStyle = "#33ff33";
+        for (let i = 0; i < columns; i++) {
+            if (dropDelays[i] > 0) {
+                dropDelays[i]--;
+                continue;
+            }
+            let text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (Math.random() > 0.975) {
+                drops[i] = 0;
+                dropDelays[i] = Math.floor(Math.random() * 40); // re-randomize drop delay after reset
+            }
+            drops[i]++;
+            if (drops[i] * fontSize > height) {
+                drops[i] = 0;
+                dropDelays[i] = Math.floor(Math.random() * 40);
+            }
+        }
+    }
+    function resizeMatrix() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        columns = Math.floor(width / fontSize);
+        drops = Array(columns).fill(1);
+        dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+    }
+    window.addEventListener('resize', resizeMatrix);
+    setInterval(drawMatrix, 50);
+    </script>
+</script>
+</body>
+</html>

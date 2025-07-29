@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATCH.NET</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      html, body { min-height: 100vh; }
+      body { overflow-y: auto; }
+      .terminal { max-width: 480px; margin: 32px auto 0 auto; width: 95vw; }
+      .terminal-content { width: 100%; }
+      @media (max-width: 600px) {
+        .terminal { max-width: 99vw; margin: 8px auto 0 auto; border-radius: 8px; }
+        .terminal-titlebar { font-size: 0.98rem; padding: 0 8px; }
+        .terminal-header { font-size: 1.2rem; }
+        .desc { font-size: 1rem; }
+      }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-bg" style="background:#000;"></canvas>
+    <div class="terminal">
+        <div class="terminal-titlebar">
+            <div class="window-buttons">
+                <div class="window-btn red"></div>
+                <div class="window-btn yellow"></div>
+                <div class="window-btn green"></div>
+            </div>
+            <span style="color:#33ff33;font-weight:bold;letter-spacing:1px;">PATCH.NET Terminal</span>
+            <nav style="margin-left:auto;display:flex;gap:18px;align-items:center;">
+                <a href="index.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Home</a>
+                <a href="downloads.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Downloads</a>
+            </nav>
+        </div>
+        <div class="terminal-content" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="terminal-output" style="font-family:'Fira Mono',monospace;color:#33ff33;font-size:1.1rem;margin-bottom:10px;text-align:center;">user@patch.net:~$</div>
+            <div class="terminal-header">Communicator</div>
+            <div class="desc">Modern chat client and server for LAN and beyond.<br>For more information, contact your network administrator.</div>
+            <a href="index.html" class="back-link">&larr; Back to main page</a>
+            <a href="index.html" class="back-link" style="margin-top:8px;display:inline-block;">Home</a>
+            <div style="margin-top:32px;">
+                <a href="Client.py" download style="color:#33bbff;text-decoration:underline;font-weight:bold;margin-right:18px;">Download Client.py</a>
+                <div style="color:#888;font-size:0.98rem;margin-bottom:10px;">Version: 0.0.35.8440</div>
+                <a href="Server.py" download style="color:#33bbff;text-decoration:underline;font-weight:bold;">Download Server.py</a>
+                <div style="color:#888;font-size:0.98rem;">Version: 0.0.23</div>
+            </div>
+        </div>
+    </div>
+<script>
+// Matrix background with PATCHNET letters
+const letters = "PATCHNET".split("");
+const canvas = document.getElementById("matrix-bg");
+const ctx = canvas.getContext("2d");
+let width = window.innerWidth;
+let height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+let fontSize = 24;
+let columns = Math.floor(width / fontSize);
+let drops = Array(columns).fill(1);
+let dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+function drawMatrix() {
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1;
+    ctx.font = fontSize + "px 'Fira Mono', 'Consolas', monospace";
+    ctx.fillStyle = "#33ff33";
+    for (let i = 0; i < columns; i++) {
+        if (dropDelays[i] > 0) {
+            dropDelays[i]--;
+            continue;
+        }
+        let text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (Math.random() > 0.975) {
+            drops[i] = 0;
+            dropDelays[i] = Math.floor(Math.random() * 40);
+        }
+        drops[i]++;
+        if (drops[i] * fontSize > height) {
+            drops[i] = 0;
+            dropDelays[i] = Math.floor(Math.random() * 40);
+        }
+    }
+}
+function resizeMatrix() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    columns = Math.floor(width / fontSize);
+    drops = Array(columns).fill(1);
+    dropDelays = Array(columns).fill(0).map(() => Math.floor(Math.random() * 40));
+}
+window.addEventListener('resize', resizeMatrix);
+setInterval(drawMatrix, 50);
+</script>
+<script>
+// Redirect to thanks.html after download
+function setupDownloadRedirects() {
+    const downloadLinks = document.querySelectorAll('a[download]');
+    downloadLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            setTimeout(() => {
+                window.location.href = 'thanks.html';
+            }, 300);
+        });
+    });
+}
+setupDownloadRedirects();
+</script>
+</body>
+</html>
