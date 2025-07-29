@@ -1,0 +1,14 @@
+[
+    {"name": "Forge", "url": "https://files.minecraftforge.net/net/minecraftforge/forge/", "search": "https://files.minecraftforge.net/net/minecraftforge/forge/index_{query}.html", "games": ["forge"]},
+    {"name": "CurseForge", "url": "https://www.curseforge.com/minecraft/mc-mods", "search": "https://www.curseforge.com/minecraft/mc-mods/search?search={query}", "games": ["minecraft"]},
+    {"name": "Modrinth", "url": "https://modrinth.com/mods", "search": "https://modrinth.com/mods?q={query}", "games": ["minecraft"]},
+    {"name": "MCreator", "url": "https://mcreator.net/mods", "search": "https://mcreator.net/mods/search/{query}", "games": ["minecraft"]},
+    {"name": "Planet Minecraft", "url": "https://www.planetminecraft.com/resources/mods/", "search": "https://www.planetminecraft.com/resources/mods/?keywords={query}", "games": ["minecraft"]},
+    {"name": "CurseForge", "url": "https://www.curseforge.com/terraria", "search": "https://www.curseforge.com/terrariasearch?search={query}", "games": ["terraria"]},
+    {"name": "GTA5-Mods.com", "url": "https://www.gta5-mods.com/", "search": "https://www.gta5-mods.com/search/{query}", "games": ["gta", "gta5", "gta 5", "gta v", "grand theft auto", "fivem"]},
+    {"name": "ModDB", "url": "https://www.moddb.com/mods", "search": "https://www.moddb.com/mods?filter=t&kw={query}", "games": []},
+    {"name": "GameBanana", "url": "https://gamebanana.com/mods", "search": "https://gamebanana.com/mods/search?search={query}", "games": []},
+    {"name": "Nexus Mods", "url": "https://www.nexusmods.com/", "search": "https://www.nexusmods.com/games/{query}", "games": []},
+    {"name": "Modland", "url": "https://www.modland.net/beamng.drive-mods", "search": "https://www.modland.net/beamng.drive-mods/search/{query}", "games": ["beammp", "beamng"]},
+    {"name": "7 Days to Die Mods", "url": "https://7daystodiemods.com/", "search": "https://7daystodiemods.com/?s={query}", "games": ["7 days", "7 days to die"]}
+]

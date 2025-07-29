@@ -1,0 +1,15 @@
+[
+    {"name": "Nixware", "url": "https://nixware.cc/", "games": ["cs2"]},
+    {"name": "EXLoader", "url": "https://pl.exloader.net/", "games": ["cs2", "csgo", "minecraft", "gta", "gta5", "gta 5", "gta v", "grand theft auto", "lethalcompany", "lethal company", "roblox", "amongus", "among us"]},
+    {"name": "Meteor Client", "url": "https://meteorclient.com/", "games": ["minecraft"]},
+    {"name": "CheatHappens", "url": "https://www.cheathappens.com/", "search": "https://www.cheathappens.com/search.asp?search={query}", "games": []},
+    {"name": "Unknown Cheats", "url": "https://www.unknowncheats.me/", "games":[]},
+    {"name": "CSHacked", "url": "https://www.cshacked.pl/", "search": "https://www.cshacked.pl/wyszukiwarka/?q={query}&quick=1", "games": []},
+    {"name": "WeMod", "url": "https://www.wemod.com/cheats", "search": "https://www.wemod.com/cheats/search?query={query}", "games": []},
+    {"name": "FearLess Cheat Engine", "url": "https://fearlessrevolution.com/", "search": "https://fearlessrevolution.com/search.php?keywords={query}", "games": []},
+    {"name": "GameCopyWorld Cheats", "url": "https://www.gamecopyworld.com/", "search": "https://www.gamecopyworld.com/search.php?search={query}", "games": []},
+    {"name": "SuperCheats", "url": "https://www.supercheats.com/", "search": "https://www.supercheats.com/{query}-cheats.htm", "games": []},
+    {"name": "CheatCodes.com", "url": "https://www.cheatcodes.com/", "search": "https://www.cheatcodes.com/search/?keyword={query}", "games": []},
+    {"name": "MegaGames Trainers", "url": "https://megagames.com/trainers", "search": "https://megagames.com/games/{query}", "games": []},
+    {"name": "MrAntiFun", "url": "https://mrantifun.net/index.php?forums/trainer-releases.2/", "search": "https://mrantifun.net/index.php?search/{query}/", "games": []}
+]

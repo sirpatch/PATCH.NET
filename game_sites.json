@@ -1,0 +1,9 @@
+[
+    {"name": "Steam RIP", "url": "https://steamrip.com/", "search": "https://steamrip.com/?s={query}"},
+    {"name": "Steam Unlocked", "url": "https://steamunlocked.org/", "search": "https://steamunlocked.org/?s={query}"},
+    {"name": "Online Fix", "url": "https://online-fix.me/", "search": "https://online-fix.me/index.php?do=search&subaction=search&story={query}"},
+    {"name": "Ova Games", "url": "https://ovagames.net/", "search": "https://ovagames.net/?s={query}"},
+    {"name": "GameCopyWorld", "url": "https://www.gamecopyworld.com/", "search": "https://www.gamecopyworld.com/search.php?search={query}"},
+    {"name": "GamePressure", "url": "https://www.gamepressure.com/games.asp", "search": "https://www.gamepressure.com/games.asp?search={query}"},
+    {"name": "Fit Girl", "url": "https://fitgirl-repacks.site/", "search": "https://fitgirl-repacks.site/?s={query}"}
+]
