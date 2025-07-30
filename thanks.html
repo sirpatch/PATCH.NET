@@ -15,7 +15,7 @@
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PATCH.NET</title>
+    <title>Thanks for Downloading - PATCH.NET</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -31,13 +31,13 @@
             <span style="color:#33ff33;font-weight:bold;letter-spacing:1px;">PATCH.NET Terminal</span>
             <nav style="margin-left:auto;display:flex;gap:18px;align-items:center;">
                 <a href="index.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Home</a>
+                <a href="downloads.html" style="color:#33ff33;text-decoration:none;font-weight:bold;">Downloads</a>
             </nav>
         </div>
-        <div class="terminal-content" style="display:flex;flex-direction:column;align-items:center;">
-            <div class="terminal-output" style="font-family:'Fira Mono',monospace;color:#33ff33;font-size:1.1rem;margin-bottom:10px;text-align:center;">deadlist@patch.net:~$</div>
-            <div class="terminal-header">DEADLIST</div>
-            <div style="margin-bottom:18px;">A dark horror game by sirpatch.<br>More info and downloads coming soon.</div>
-            <a href="games.html" class="program-list-link">&larr; Back to My Games</a>
+        <div class="terminal-content">
+            <div class="terminal-header">Thanks for Downloading!</div>
+            <div style="margin-bottom:18px;">Thank you for downloading from PATCH.NET.<br>Enjoy your new software or game!<br>If you have any questions or feedback, feel free to reach out.</div>
+            <a href="index.html" class="program-list-link">&larr; Back to Home</a>
         </div>
     </div>
     <footer>
@@ -45,18 +45,6 @@
         <span style="color:#888;">Inspired by classic terminals.</span>
     </footer>
 <script>
-// Redirect to thanks.html after download
-function setupDownloadRedirects() {
-    const downloadLinks = document.querySelectorAll('a[download]');
-    downloadLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            setTimeout(() => {
-                window.location.href = 'thanks.html';
-            }, 300);
-        });
-    });
-}
-setupDownloadRedirects();
 // Matrix background with PATCHNET letters
 const letters = "PATCHNET".split("");
 const canvas = document.getElementById("matrix-bg");
